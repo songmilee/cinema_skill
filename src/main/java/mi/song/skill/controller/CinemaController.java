@@ -1,7 +1,9 @@
 package mi.song.skill.controller;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
@@ -24,8 +26,8 @@ public class CinemaController {
     }
 
     //영화 정보 받아오는 함수
-    public JSONObject getCinemaInfo() {
-        JSONObject result = new JSONObject();
+    public JsonObject getCinemaInfo() {        
+        JsonObject result = new JsonObject();
         String baseUrl = "https://search.naver.com/search.naver?sm=top_hty&fbm=1&ie=utf8&query=%EC%98%81%ED%99%94+%EC%83%81%EC%98%81%EC%9E%91";
         try {
 
@@ -35,32 +37,34 @@ public class CinemaController {
             Document cinemaWholePage = Jsoup.connect(baseUrl).get();
             Elements section = cinemaWholePage.select("ul.thumb_list>li>dl>dt>a");
                         
-            JSONArray jsonArray = new JSONArray();
+            JsonArray jsonArray = new JsonArray();
 
             for (Element element : section) {
                 Attributes attr = element.attributes();
                 String title = attr.get("title");
-                jsonArray.put(title);                
+                jsonArray.add(title);                
             }          
-            JSONObject data = new JSONObject();            
-            result.append("code", 1000);
+            JsonObject data = new JsonObject();
+            JsonArray empty = new JsonArray();            
+            result.addProperty("code", "1000");
 
             //data append
-            data.append("contentType", "textRandom");
-            data.append("inputType", "text");
-            data.append("responseButtons", new JSONArray());
-            data.append("responseText", jsonArray);            
-            data.append("imagePath", false);
-            data.append("imageUrl", null);
-            data.append("entities", new JSONArray());
-            data.append("requiredEntities", new JSONArray());
-            data.append("lifespan", 5);
+            data.addProperty("contentType", "textRandom");
+            data.addProperty("inputType", "text");
+            data.add("responseButtons", empty);
+            data.add("responseText", jsonArray);     
+            data.addProperty("responseTitle", "");       
+            data.add("imagePath", JsonNull.INSTANCE);
+            data.add("imageUrl", JsonNull.INSTANCE);
+            data.add("entities", empty);
+            data.add("requiredEntities", empty);
+            data.addProperty("lifespan", 5);
 
-            result.append("data", data);
+            result.add("data", data);
 
         } catch(Exception e){
             e.printStackTrace();
-            result.append("code", 9000);
+            result.addProperty("code", "9000");
         }finally{
             return result;
         }        
