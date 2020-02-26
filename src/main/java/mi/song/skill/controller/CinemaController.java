@@ -25,7 +25,7 @@ public class CinemaController {
 
     //영화 정보 받아오는 함수
     public JSONObject getCinemaInfo() {
-        JSONObject jsonObject = new JSONObject();
+        JSONObject result = new JSONObject();
         String baseUrl = "https://search.naver.com/search.naver?sm=top_hty&fbm=1&ie=utf8&query=%EC%98%81%ED%99%94+%EC%83%81%EC%98%81%EC%9E%91";
         try {
 
@@ -42,14 +42,28 @@ public class CinemaController {
                 String title = attr.get("title");
                 jsonArray.put(title);                
             }          
-            
-            jsonObject.append("movies", jsonArray);            
+            JSONObject data = new JSONObject();            
+            result.append("code", 1000);
+
+            //data append
+            data.append("contentType", "textRandom");
+            data.append("inputType", "text");
+            data.append("responseButtons", new JSONArray());
+            data.append("responseText", jsonArray);            
+            data.append("imagePath", false);
+            data.append("imageUrl", null);
+            data.append("entities", new JSONArray());
+            data.append("requiredEntities", new JSONArray());
+            data.append("lifespan", 5);
+
+            result.append("data", data);
 
         } catch(Exception e){
             e.printStackTrace();
-        }
-
-        return jsonObject;
+            result.append("code", 9000);
+        }finally{
+            return result;
+        }        
     }
 
 }
