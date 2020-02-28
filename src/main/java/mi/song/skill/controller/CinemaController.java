@@ -45,11 +45,14 @@ public class CinemaController {
                 jsonArray.add(title);                
             }          
             JsonObject data = new JsonObject();
-            JsonArray empty = new JsonArray();            
+            JsonArray empty = new JsonArray();     
+            JsonArray contentType = new JsonArray();
+
             result.addProperty("code", "1000");
+            contentType.add("textRandom");
 
             //data append
-            data.addProperty("contentType", "textRandom");
+            data.add("contentType", contentType);
             data.addProperty("inputType", "text");
             data.add("responseButtons", empty);
             data.add("responseText", jsonArray);     
