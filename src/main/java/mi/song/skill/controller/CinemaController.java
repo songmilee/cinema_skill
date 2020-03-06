@@ -36,14 +36,17 @@ public class CinemaController {
 
             Document cinemaWholePage = Jsoup.connect(baseUrl).get();
             Elements section = cinemaWholePage.select("ul.thumb_list>li>dl>dt>a");
-                        
-            JsonArray jsonArray = new JsonArray();
+                                    
+            StringBuilder contentsTxt = new StringBuilder();            
+            contentsTxt.append("인기 영화 리스트는 다음과 같습니다.");
 
             for (Element element : section) {
                 Attributes attr = element.attributes();
                 String title = attr.get("title");
-                jsonArray.add(title);                
+                contentsTxt.append(title+"\n");                
             }          
+            contentsTxt.append("\n보고 싶은 영화를 선택해주세요.\n");
+
             JsonObject data = new JsonObject();
             JsonArray empty = new JsonArray();     
             JsonArray contentType = new JsonArray();
@@ -55,7 +58,7 @@ public class CinemaController {
             data.add("contentType", contentType);
             data.addProperty("inputType", "text");
             data.add("responseButtons", empty);
-            data.add("responseText", jsonArray);     
+            data.addProperty("responseText", contentsTxt.toString());              
             data.addProperty("responseTitle", "");       
             data.add("imagePath", JsonNull.INSTANCE);
             data.add("imageUrl", JsonNull.INSTANCE);
